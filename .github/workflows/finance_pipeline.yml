@@ -1,0 +1,47 @@
+name: Finance Daily Pipeline
+
+on:
+  schedule:
+    # Runs daily at 23:30 UTC (05:00 AM IST)
+    - cron: '30 23 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  pipeline:
+    name: Finance Pipeline Execution
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      GOOGLE_KEY: ${{ secrets.GOOGLE_KEY || vars.GOOGLE_KEY }}
+      PYTHONUNBUFFERED: "1"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'tasks/requirements.txt'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r tasks/requirements.txt
+
+      - name: "Task 1: Bronze1 (Market Stocks Ingestion)"
+        run: python -m tasks.Bronze1
+
+      - name: "Task 2: Bronze2 (Download Company HTML)"
+        run: python -m tasks.Bronze2
+
+      - name: "Task 3: Bronze3 (Parse Fundamentals & P&L)"
+        run: python -m tasks.Bronze3
+
+      - name: "Task 4: Screener (WAGR, PEG & Valuation Ranking)"
+        run: python -m tasks.screener
+
+      - name: "Task 5: Zerodha (Portfolios, Capital Gains & XIRR)"
+        run: python -m tasks.zerodha
