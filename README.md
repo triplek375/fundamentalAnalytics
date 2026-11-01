@@ -1,4 +1,4 @@
-# Finance Pipeline & Portfolio Tracker
+# Fundamental Analytics Pipeline & Portfolio Tracker
 
 An automated serverless data pipeline and investment tracker running daily on **GitHub Actions**.
 
@@ -95,8 +95,8 @@ My Drive/
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/triplek375/Finance.git
-   cd Finance
+   git clone https://github.com/triplek375/fundamentalAnalytics.git
+   cd fundamentalAnalytics
    ```
 
 2. **Create a virtual environment and install dependencies**:
